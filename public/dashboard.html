@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>Dashboard</title></head>
+<body>
+  <h1>Dashboard</h1>
+  <p id="msg">Loading...</p>
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    async function getDashboard() {
+      const token = localStorage.getItem('token');
+      const res = await fetch('/api/auth/dashboard', {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        document.getElementById('msg').innerText = data.msg;
+      } else {
+        alert(data.msg || 'Unauthorized');
+        window.location.href = 'index.html';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = 'index.html';
+    }
+
+    getDashboard();
+  </script>
+</body>
+</html>

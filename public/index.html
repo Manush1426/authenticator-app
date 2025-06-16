@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head><title>Auth System</title></head>
+<body>
+  <h2>Register</h2>
+  <form id="registerForm">
+    <input id="regName" placeholder="Name"><br>
+    <input id="regEmail" placeholder="Email"><br>
+    <input id="regPassword" placeholder="Password" type="password"><br>
+    <button>Register</button>
+  </form>
+
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input id="logEmail" placeholder="Email"><br>
+    <input id="logPassword" placeholder="Password" type="password"><br>
+    <button>Login</button>
+  </form>
+
+  <script>
+    // Register
+    document.getElementById('registerForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: regName.value,
+          email: regEmail.value,
+          password: regPassword.value
+        })
+      });
+      const data = await res.json();
+      alert(data.msg || 'Registered');
+    };
+
+    // Login
+    document.getElementById('loginForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: logEmail.value,
+          password: logPassword.value
+        })
+      });
+      const data = await res.json();
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        window.location.href = 'dashboard.html';
+      } else {
+        alert(data.msg || 'Login failed');
+      }
+    };
+  </script>
+</body>
+</html>
